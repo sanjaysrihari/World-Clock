@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <style>
+    body {
+    background-color: lightblue;
+    }
+    div {
+    font-size: 40px;
+    }
+    </style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Time Finder">
+        <meta name="author" content="Sanjay Srhari">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body><center>
+        <h1>World Clock</h1>
+        <form onSubmit="return false">
+            Input the name of a place to get the current time there:
+            <input type="text" id="a">
+            <br><br>
+            <button type="button" onClick="TimeGetter()">Submit</button>
+        </form>
+        <br><br><br>
+        <div id="timeatplace"></div>
+    </center></body>
+    <script>
+        function TimeGetter() {
+            function Get(yourUrl){
+                var Httpreq = new XMLHttpRequest();
+                Httpreq.open("GET",yourUrl,false);
+                Httpreq.send(null);
+                return Httpreq.responseText;          
+                }
+            var username = "gjcl";
+            var placename = String(document.getElementById("a").value);
+            url = "http://api.geonames.org/searchJSON?q=" + placename + "&maxRows=1&username=" + username;
+            var citydata = Get(url);
+            var cityobj = JSON.parse(citydata);
+            var citydata1 = cityobj.geonames;
+            var citydata2 = citydata1[0];
+            var lat = citydata2.lat;
+            var long = citydata2.lng;
+            url2 = "http://api.geonames.org/timezoneJSON?lat=" + lat + "&lng=" + long + "&username=" + username;
+            var timedata = Get(url2);
+            var timeobj = JSON.parse(timedata);
+            time = timeobj.time.substr(11);
+            document.getElementById("timeatplace").innerHTML = time;
+        }
+    </script>
+</html>
